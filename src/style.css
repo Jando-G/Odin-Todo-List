@@ -31,7 +31,7 @@ body {
     justify-items: center;
     align-items: center;
 }
-#form-container {
+.form-container {
     position: fixed;
     height: 40rem;
     width: 40rem;
@@ -45,7 +45,7 @@ body {
     justify-content: center;
     grid-auto-rows: 1fr;
 }
-#form-container input {
+.form-container input {
     height: 4rem;
 }
 .hidden {
@@ -59,4 +59,8 @@ body {
     bottom: 0;
     background-color: rgba(0, 0, 0, .5);
     z-index: 9;
+}
+.task {
+    display: grid;
+    grid-template-columns: 30%,  70%;
 }
