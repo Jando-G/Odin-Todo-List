@@ -3,12 +3,7 @@ import plus from './plus-circle.png';
 import { compareAsc, format } from 'date-fns'
 
 const todo = (title, description, dueDate, priority) => {
-    const getTitle = () => title;
-    const getDescription = () => description;
-    const getDueDate = () => dueDate;
-    const getPriority = () => priority;
-
-    return {getTitle, getDescription, getDueDate, getPriority};
+    return {title, description, dueDate, priority};
 };
 
  const domStuff = (() => {
@@ -27,25 +22,25 @@ const todo = (title, description, dueDate, priority) => {
          const newDiv = document.createElement('div');
          newDiv.classList.add('task');
          const taskTitle = document.createElement('div');
-         taskTitle.innerHTML = task.getTitle();
+         taskTitle.innerHTML = task.title;
          newDiv.appendChild(taskTitle);
          const taskDate = document.createElement('div');
-         taskDate.innerHTML = task.getDueDate();
+         taskDate.innerHTML = task.dueDate;
          newDiv.appendChild(taskDate);
          newDiv.addEventListener('click', ()=> {
             //generate the details and append to body
         const details = document.createElement('div');
         details.classList.add('form-container');
         const detHead = document.createElement('h1');
-        detHead.innerHTML = task.getTitle();
+        detHead.innerHTML = task.title;
         details.appendChild(detHead);
         const detDesc = document.createElement('div');
-        detDesc.innerHTML = task.getDescription();
+        detDesc.innerHTML = task.description;
         details.appendChild(detDesc);
         document.body.appendChild(details);
         const detDue = document.createElement('div');
         //add amount of days left in paranthesis
-        detDue.innerHTML = `Due: ${task.getDueDate()} (In blank days)`;
+        detDue.innerHTML = `Due: ${task.dueDate} (In blank days)`;
         details.appendChild(detDue);
         overlay.classList.remove('hidden');
          });
@@ -68,11 +63,10 @@ const todo = (title, description, dueDate, priority) => {
 let projectsList = {};
 if(window.localStorage.length) {
     let str = localStorage.getItem('data');
-    console.log(JSON.parse(str))
+    projectsList = JSON.parse(str);
+    console.log('triggered');
 }
-
-//if user has no data, populate a new project
-if(!Object.keys(projectsList).length) {
+else { //no data, populate list
     projectsList['My Project'] = [todo('my task', 'do cool stuff', 'tomorrow', 'urgent'), 
     todo('my other task', 'do more cool stuff', 'tomorrow', 'urgent')];
     
@@ -223,9 +217,7 @@ submitTask.addEventListener('click', ()=> {
         overlay.classList.add('hidden');
     }
     });
-    console.log(projectsList);
-    console.log(JSON.parse(JSON.stringify(projectsList['My Project'][0])));
     window.onbeforeunload = ()=> {
         localStorage.clear();
-        localStoreage.setItem('data', JSON.stringify(projectsList));
+        localStorage.setItem('data', JSON.stringify(projectsList));
     }
