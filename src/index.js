@@ -1,21 +1,45 @@
 import './style.css';
 import plus from './plus-circle.png';
+import trashCan from './trash-can-outline.png';
 import { compareAsc, format } from 'date-fns'
 
 const todo = (title, description, dueDate, priority) => {
     return {title, description, dueDate, priority};
 };
-
  const domStuff = (() => {
      const renderProj = (project) => {
         const container = document.getElementById('projects');
         const newDiv = document.createElement('div');
-        newDiv.innerHTML = project;
-        newDiv.addEventListener('click', ()=> {
+        const newTitle = document.createElement('div');
+        newTitle.innerHTML = project;
+        newTitle.addEventListener('click', ()=> {
             currentProject = project;
             renderTasks(project);
         });
+        newDiv.appendChild(newTitle);
+        const trash = new Image();
+        trash.src = trashCan;
+        trash.addEventListener('click', ()=> {
+            delete projectsList[project];
+            container.removeChild(newDiv);
+            if(project == currentProject) {
+                if(Object.keys(projectsList)[0]) {
+                    currentProject = Object.keys(projectsList)[0];
+                    renderTasks(Object.keys(projectsList)[0]);
+                }
+                else {
+                    currentProject = null;
+                    const container = document.getElementById('tasks');
+                    while(container.childElementCount > 1) {
+                        container.removeChild(container.lastChild);
+                    }
+                }
+            }
+        });
+        newDiv.appendChild(trash);
         container.appendChild(newDiv);
+        currentProject = project;
+        renderTasks(project);
      }
      const renderTask = (task) => {
          const container = document.getElementById('tasks');
@@ -64,7 +88,6 @@ let projectsList = {};
 if(window.localStorage.length) {
     let str = localStorage.getItem('data');
     projectsList = JSON.parse(str);
-    console.log('triggered');
 }
 else { //no data, populate list
     projectsList['My Project'] = [todo('my task', 'do cool stuff', 'tomorrow', 'urgent'), 
@@ -219,5 +242,7 @@ submitTask.addEventListener('click', ()=> {
     });
     window.onbeforeunload = ()=> {
         localStorage.clear();
-        localStorage.setItem('data', JSON.stringify(projectsList));
+        if(Object.keys(projectsList).length) {
+            localStorage.setItem('data', JSON.stringify(projectsList));
+        }
     }
