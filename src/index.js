@@ -110,6 +110,7 @@ const todo = (title, description, dueDate, priority) => {
             }
         }
         currentProject = project;
+        mainTitle.innerHTML = project;
      }
      return {renderProj, renderTask, renderTasks};
  })();
@@ -122,7 +123,6 @@ if(window.localStorage.length) {
 else { //no data, populate list
     projectsList['My Project'] = [todo('my task', 'do cool stuff', 'tomorrow', 'urgent')];
 }
-
 let currentProject = Object.keys(projectsList)[0];
 /*Code for generating skeleton of page */
 const content = document.getElementById('content');
