@@ -12,10 +12,11 @@ const todo = (title, description, dueDate, priority) => {
         const newDiv = document.createElement('div');
         const newTitle = document.createElement('div');
         newTitle.innerHTML = project;
-        newTitle.addEventListener('click', ()=> {
+        newDiv.addEventListener('click', ()=> {
             currentProject = project;
             renderTasks(project);
         });
+        newDiv.classList.add('project');
         newDiv.appendChild(newTitle);
         const trash = new Image();
         trash.src = trashCan;
@@ -37,7 +38,8 @@ const todo = (title, description, dueDate, priority) => {
             }
         });
         newDiv.appendChild(trash);
-        container.appendChild(newDiv);
+        console.log(container)
+        container.insertBefore(newDiv, container.firstChild);
         currentProject = project;
         renderTasks(project);
      }
@@ -51,7 +53,20 @@ const todo = (title, description, dueDate, priority) => {
          const taskDate = document.createElement('div');
          taskDate.innerHTML = task.dueDate;
          newDiv.appendChild(taskDate);
-         newDiv.addEventListener('click', ()=> {
+         const trash = new Image();
+         trash.src = trashCan;
+         newDiv.appendChild(trash);
+         trash.addEventListener('click', () => {
+            for(let i = 0; i < projectsList[currentProject].length; i++) {
+                if(projectsList[currentProject][i] == task) {
+                    projectsList[currentProject].splice(i, 1);
+                    break;
+                }
+            }
+            container.removeChild(newDiv);
+         });
+         newDiv.addEventListener('click', (e)=> {
+            if(e.target != trash) {
             //generate the details and append to body
         const details = document.createElement('div');
         details.classList.add('form-container');
@@ -67,6 +82,7 @@ const todo = (title, description, dueDate, priority) => {
         detDue.innerHTML = `Due: ${task.dueDate} (In blank days)`;
         details.appendChild(detDue);
         overlay.classList.remove('hidden');
+            }
          });
          container.appendChild(newDiv);
      }
@@ -81,6 +97,11 @@ const todo = (title, description, dueDate, priority) => {
                 domStuff.renderTask(projectsList[project][task]);
             }
      }
+     const setActiveProj = (project) => {
+        const container = document.getElementById('projects');
+        currentProject = project;
+
+     }
      return {renderProj, renderTask, renderTasks};
  })();
 
@@ -90,11 +111,7 @@ if(window.localStorage.length) {
     projectsList = JSON.parse(str);
 }
 else { //no data, populate list
-    projectsList['My Project'] = [todo('my task', 'do cool stuff', 'tomorrow', 'urgent'), 
-    todo('my other task', 'do more cool stuff', 'tomorrow', 'urgent')];
-    
-    projectsList['My other Project'] = [todo('my otro task', 'do cool stuff', 'tomorrow', 'urgent'), 
-    todo('my other otro task', 'do more cool stuff', 'tomorrow', 'urgent')];
+    projectsList['My Project'] = [todo('my task', 'do cool stuff', 'tomorrow', 'urgent')];
 }
 
 let currentProject = Object.keys(projectsList)[0];
@@ -118,7 +135,7 @@ projBtn.src = plus;
 projBtn.setAttribute('id', 'projBtn');
 projBtnContainer.appendChild(projBtn);
 projects.appendChild(projBtnContainer);
-
+console.log(projBtn)
 
 const tasks = document.createElement('div');
 tasks.setAttribute('id', 'tasks');

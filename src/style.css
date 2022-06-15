@@ -2,21 +2,35 @@
     box-sizing: border-box;
 }
 body {
-    background-color: #FAF9F6;
+    background-color: #ecb47f;
     margin: 0;
 }
 #projects {
-    background-color: rgb(172, 186, 218);
+    background-color: rgb(211, 211, 211);
     min-width: 100%;
     min-height: 92vh;
+    padding-top: 2rem;
+}
+.project {
+    height: 4rem;
+    font-size: 1.5rem;
+    margin-top: 1rem;
+    grid-gap: 1rem;
+    margin-top: 0;
+}
+.project div {
+    width: 9rem;
+}
+.project:hover {
+    background-color: rgb(189, 189, 189);
 }
 #projects > div, #tasks > div {
     display: flex;
     justify-content: center;
-    margin-top: 2vh;
+    align-items: center; 
 }
 #tasks {
-    background-color: rgb(218, 172, 172);
+    background-color: rgb(250, 250, 250);
     min-width: 100%;
     min-height: 92vh;
 }
@@ -26,8 +40,8 @@ body {
 }
 #content {
     display: grid;
-    grid-template-columns: 15vw 1fr;
-    grid-template-rows: 8vh 92vh;
+    grid-template-columns: 15rem 1fr;
+    grid-template-rows: 10rem 1fr;
     justify-items: center;
     align-items: center;
 }
@@ -63,4 +77,17 @@ body {
 .task {
     display: grid;
     grid-template-columns: 30%,  70%;
+}
+h2 {
+    background-color: rgb(20, 20, 20);
+    color: rgb(245, 245, 245);
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+img {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
 }
