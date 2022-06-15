@@ -18,7 +18,7 @@ const todo = (title, description, dueDate, priority) => {
         trash.src = trashCan;
         newDiv.addEventListener('click', (e)=> {
             if(e.target != trash) {
-                currentProject = project;
+                setActiveProj(project);
                 renderTasks(project);
             }
         });
@@ -27,8 +27,7 @@ const todo = (title, description, dueDate, priority) => {
             container.removeChild(newDiv);
             if(project == currentProject) {
                 if(Object.keys(projectsList)[0]) {
-                    console.log('render trigger');
-                    currentProject = Object.keys(projectsList)[0];
+                    setActiveProj(Object.keys(projectsList)[0]);
                     renderTasks(currentProject);
                 }
                 else {
@@ -42,7 +41,7 @@ const todo = (title, description, dueDate, priority) => {
         });
         newDiv.appendChild(trash);
         container.insertBefore(newDiv, container.lastChild);
-        currentProject = project;
+        setActiveProj(project);
         renderTasks(project);
      }
      const renderTask = (task) => {
@@ -89,8 +88,6 @@ const todo = (title, description, dueDate, priority) => {
          container.appendChild(newDiv);
      }
      const renderTasks = (project) => {
-        console.log('render')
-        console.log(project)
         const container = document.getElementById('tasks');
             //remove existing tasks, making sure not to remove button
             while(container.childElementCount > 1) {
@@ -102,9 +99,17 @@ const todo = (title, description, dueDate, priority) => {
             }
      }
      const setActiveProj = (project) => {
-        const container = document.getElementById('projects');
+        const projects = document.getElementsByClassName('project');
+        if(document.getElementById('active')) {
+            document.getElementById('active').removeAttribute('id');
+        }
+        for(let i = 0; i < projects.length; i++) {
+            if(projects[i].firstChild.innerHTML == project) {
+                projects[i].setAttribute('id', 'active');
+                break;
+            }
+        }
         currentProject = project;
-
      }
      return {renderProj, renderTask, renderTasks};
  })();

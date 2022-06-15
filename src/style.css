@@ -24,6 +24,9 @@ body {
 .project:hover {
     background-color: rgb(189, 189, 189);
 }
+#active {
+    background-color: rgb(172, 172, 172);
+}
 #projects > div, #tasks > div {
     display: flex;
     justify-content: center;

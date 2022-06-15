@@ -1,2 +1,4 @@
 make it so all those local variables (such as const container = proj...)
 are using the global variables already declared
+
+the forms "submit" on enter instead of doing what they are supposed to
