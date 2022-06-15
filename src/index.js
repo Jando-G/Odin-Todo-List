@@ -12,21 +12,24 @@ const todo = (title, description, dueDate, priority) => {
         const newDiv = document.createElement('div');
         const newTitle = document.createElement('div');
         newTitle.innerHTML = project;
-        newDiv.addEventListener('click', ()=> {
-            currentProject = project;
-            renderTasks(project);
-        });
         newDiv.classList.add('project');
         newDiv.appendChild(newTitle);
         const trash = new Image();
         trash.src = trashCan;
+        newDiv.addEventListener('click', (e)=> {
+            if(e.target != trash) {
+                currentProject = project;
+                renderTasks(project);
+            }
+        });
         trash.addEventListener('click', ()=> {
             delete projectsList[project];
             container.removeChild(newDiv);
             if(project == currentProject) {
                 if(Object.keys(projectsList)[0]) {
+                    console.log('render trigger');
                     currentProject = Object.keys(projectsList)[0];
-                    renderTasks(Object.keys(projectsList)[0]);
+                    renderTasks(currentProject);
                 }
                 else {
                     currentProject = null;
@@ -38,8 +41,7 @@ const todo = (title, description, dueDate, priority) => {
             }
         });
         newDiv.appendChild(trash);
-        console.log(container)
-        container.insertBefore(newDiv, container.firstChild);
+        container.insertBefore(newDiv, container.lastChild);
         currentProject = project;
         renderTasks(project);
      }
@@ -87,6 +89,8 @@ const todo = (title, description, dueDate, priority) => {
          container.appendChild(newDiv);
      }
      const renderTasks = (project) => {
+        console.log('render')
+        console.log(project)
         const container = document.getElementById('tasks');
             //remove existing tasks, making sure not to remove button
             while(container.childElementCount > 1) {
@@ -135,7 +139,6 @@ projBtn.src = plus;
 projBtn.setAttribute('id', 'projBtn');
 projBtnContainer.appendChild(projBtn);
 projects.appendChild(projBtnContainer);
-console.log(projBtn)
 
 const tasks = document.createElement('div');
 tasks.setAttribute('id', 'tasks');
@@ -152,8 +155,6 @@ tasks.appendChild(taskBtnContainer);
 for (const project in projectsList) {
     domStuff.renderProj(project);
 };
-domStuff.renderTasks(currentProject);
-
 //add project popup
 const projForm = document.createElement('form');
 projForm.classList.add('form-container');
