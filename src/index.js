@@ -112,7 +112,54 @@ const todo = (title, description, dueDate, priority) => {
         currentProject = project;
         mainTitle.innerHTML = project;
      }
-     return {renderProj, renderTask, renderTasks};
+     const generateProjBtn = () => {
+        const projBtnContainer = document.createElement('div');
+        const projBtn = new Image();
+        projBtn.src = plus;
+        projBtn.setAttribute('id', 'projBtn');
+        projBtn.addEventListener('click', () => {
+            projects.removeChild(projBtnContainer);
+            generateProjForm();
+        });
+        projBtnContainer.appendChild(projBtn);
+        projects.appendChild(projBtnContainer);
+    };
+    const generateProjForm = () => {
+        const projFormContainer = document.createElement('form');
+        projFormContainer.setAttribute('id', 'projForm');
+        const textField = document.createElement('input');
+        textField.setAttribute('type', 'text');
+        projFormContainer.appendChild(textField);
+        const cancel = document.createElement('input');
+        cancel.setAttribute('type', 'button');
+        cancel.setAttribute('id', 'cancel');
+        cancel.setAttribute('value', 'cancel');
+        cancel.addEventListener('click', () => {
+            projects.removeChild(projFormContainer);
+            generateProjBtn();
+        });
+        projFormContainer.appendChild(cancel);
+        const submit = document.createElement('input');
+        submit.setAttribute('type', 'button');
+        submit.setAttribute('id', 'submit');
+        submit.setAttribute('value', 'submit');
+        submit.addEventListener('click', () => {
+            if(document.getElementById('projForm').checkValidity()) {
+               if(!(textField.value in projectsList)) {
+                   projectsList[textField.value] = [];
+                   domStuff.renderProj(textField.value);
+                   projects.removeChild(projFormContainer);
+                   generateProjBtn();
+               }
+               else {
+                   alert(`A project with name the name "${textField.value}" already exists!`);
+               }
+           }
+        });
+        projFormContainer.appendChild(submit);
+        projects.appendChild(projFormContainer);
+    };
+     return {renderProj, renderTask, renderTasks, generateProjBtn};
  })();
 
 let projectsList = {};
@@ -137,13 +184,7 @@ mainTitle.innerHTML = 'TodoList';
 const projects = document.createElement('div');
 projects.setAttribute('id', 'projects');
 content.appendChild(projects);
-
-const projBtnContainer = document.createElement('div');
-const projBtn = new Image();
-projBtn.src = plus;
-projBtn.setAttribute('id', 'projBtn');
-projBtnContainer.appendChild(projBtn);
-projects.appendChild(projBtnContainer);
+domStuff.generateProjBtn();
 
 const tasks = document.createElement('div');
 tasks.setAttribute('id', 'tasks');
@@ -160,23 +201,7 @@ tasks.appendChild(taskBtnContainer);
 for (const project in projectsList) {
     domStuff.renderProj(project);
 };
-//add project popup
-const projForm = document.createElement('form');
-projForm.classList.add('form-container');
-projForm.setAttribute('id', 'projForm');
-projForm.classList.add('hidden');
-const projFormHead = document.createElement('h1');
-projFormHead.innerHTML = 'Add a new project';
-projForm.appendChild(projFormHead);
-const projNameField = document.createElement('input');
-projNameField.setAttribute('type', 'text');
-projNameField.setAttribute('placeholder', 'project name');
-projForm.appendChild(projNameField);
-const submitProj = document.createElement('input');
-submitProj.setAttribute('type', 'button');
-submitProj.setAttribute('value', 'Create Project');
-projForm.appendChild(submitProj);
-document.body.appendChild(projForm);
+//add project
 
 //add task popup
 const taskForm = document.createElement('form');
@@ -219,17 +244,12 @@ overlay.setAttribute('id', 'overlay');
 overlay.classList.add('hidden');
 document.body.appendChild(overlay);
 
-projBtn.addEventListener('click', () => {
-        projForm.classList.remove('hidden');
-        overlay.classList.remove('hidden');
-    });
 taskBtn.addEventListener('click', ()=> {
         taskForm.classList.remove('hidden');
         overlay.classList.remove('hidden');
 });
 
 overlay.addEventListener('click', ()=> {
-    projForm.classList.add('hidden');
     overlay.classList.add('hidden');
     taskForm.classList.add('hidden');
     if(document.body.lastChild != overlay) {
@@ -237,15 +257,20 @@ overlay.addEventListener('click', ()=> {
         document.body.removeChild(document.body.lastChild);
     }
     });
-submitProj.addEventListener('click', ()=> {
-    if(document.getElementById('projForm').checkValidity()) {
-        projectsList[projNameField.value] = [];
-        domStuff.renderProj(projNameField.value);
-        projNameField.value = '';
-        projForm.classList.add('hidden');
-        overlay.classList.add('hidden');
-    }
-    });
+// submitProj.addEventListener('click', ()=> {
+//     if(document.getElementById('projForm').checkValidity()) {
+//         if(!(projNameField.value in projectsList)) {
+//             projectsList[projNameField.value] = [];
+//             domStuff.renderProj(projNameField.value);
+//             projNameField.value = '';
+//             projForm.classList.add('hidden');
+//             overlay.classList.add('hidden');
+//         }
+//         else {
+//             alert(`Project with name "${projNameField.value}" already exists!`);
+//         }
+//     }
+//     });
 submitTask.addEventListener('click', ()=> {
     if(document.getElementById('taskForm').checkValidity()) {
        projectsList[currentProject].push(todo(
@@ -269,3 +294,7 @@ submitTask.addEventListener('click', ()=> {
             localStorage.setItem('data', JSON.stringify(projectsList));
         }
     }
+    projectsList['test'] = [];
+    for(let i = 0; i < 20; i++) {
+        projectsList['test'][i] = todo(`test ${i}`, 'a test task', 'dueDate', i);
+        }

@@ -4,3 +4,7 @@ are using the global variables already declared
 the forms "submit" on enter instead of doing what they are supposed to
 
 test identical project name
+
+make form use actual styling instead of just alerting
+
+limit characters for input to avoid overflow
