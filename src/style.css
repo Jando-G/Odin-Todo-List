@@ -107,10 +107,10 @@ body {
     margin-right: 10%;
     padding-left: 2rem;
     padding-right: 2rem;
+    border-radius: 14px;
 }
 .task:hover {
-    background-color: #e2e8f0;
-    border-radius: 14px;
+    filter: brightness(.9);
 }
 h2 {
     background-color: var(--black-bg-color);

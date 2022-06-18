@@ -85,6 +85,9 @@ const todo = (title, description, dueDate, priority) => {
         overlay.classList.remove('hidden');
             }
          });
+         console.log(`priority ${task.priority}`)
+         console.log(`alpha ${10 * task.priority}`)
+         newDiv.style.backgroundColor = `rgba(255, 0, 0, ${.1 * task.priority})`;
          container.appendChild(newDiv);
      }
      const renderTasks = (project) => {
@@ -232,6 +235,8 @@ taskForm.appendChild(urgencyLabel);
 const taskUrgencyField = document.createElement('input');
 taskUrgencyField.setAttribute('type', 'range');
 taskUrgencyField.setAttribute('value', 'urgency');
+taskUrgencyField.setAttribute('min', '0');
+taskUrgencyField.setAttribute('max', '5');
 taskForm.appendChild(taskUrgencyField);
 const submitTask = document.createElement('input');
 submitTask.setAttribute('type', 'button');
@@ -296,5 +301,5 @@ submitTask.addEventListener('click', ()=> {
     }
     projectsList['test'] = [];
     for(let i = 0; i < 20; i++) {
-        projectsList['test'][i] = todo(`test ${i}`, 'a test task', 'dueDate', i);
+        projectsList['test'][i] = todo(`test ${i}`, 'a test task', 'dueDate', Math.floor(Math.random() * 6));
         }
