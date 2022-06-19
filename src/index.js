@@ -47,6 +47,30 @@ const todo = (title, description, dueDate, priority) => {
      const renderTask = (task) => {
          const container = document.getElementById('tasks');
          const newDiv = document.createElement('div');
+         const checkBox = document.createElement('input');
+         checkBox.setAttribute('type', 'checkbox');
+         checkBox.addEventListener('click', () => {
+            if(checkBox.checked) {
+                newDiv.classList.add('checked');
+                for(let i = 0; i < projectsList[currentProject].length; i++) {
+                    if(projectsList[currentProject][i] == task) {
+                        projectsList[currentProject].splice(i, 1);
+                        break;
+                    }
+                }
+            }
+            else {
+                newDiv.classList.remove('checked');
+                projectsList[currentProject].push(todo(
+                    task.title,
+                    task.description,
+                    task.dueDate,
+                    task.priority
+                ));
+            }
+            
+         });
+         newDiv.appendChild(checkBox);
          newDiv.classList.add('task');
          const taskTitle = document.createElement('div');
          taskTitle.innerHTML = task.title;
@@ -54,20 +78,8 @@ const todo = (title, description, dueDate, priority) => {
          const taskDate = document.createElement('div');
          taskDate.innerHTML = task.dueDate;
          newDiv.appendChild(taskDate);
-         const trash = new Image();
-         trash.src = trashCan;
-         newDiv.appendChild(trash);
-         trash.addEventListener('click', () => {
-            for(let i = 0; i < projectsList[currentProject].length; i++) {
-                if(projectsList[currentProject][i] == task) {
-                    projectsList[currentProject].splice(i, 1);
-                    break;
-                }
-            }
-            container.removeChild(newDiv);
-         });
          newDiv.addEventListener('click', (e)=> {
-            if(e.target != trash) {
+            if(e.target != checkBox) {
             //generate the details and append to body
         const details = document.createElement('div');
         details.classList.add('form-container');
@@ -85,8 +97,6 @@ const todo = (title, description, dueDate, priority) => {
         overlay.classList.remove('hidden');
             }
          });
-         console.log(`priority ${task.priority}`)
-         console.log(`alpha ${10 * task.priority}`)
          newDiv.style.backgroundColor = `rgba(255, 0, 0, ${.1 * task.priority})`;
          container.appendChild(newDiv);
      }
@@ -132,6 +142,8 @@ const todo = (title, description, dueDate, priority) => {
         projFormContainer.setAttribute('id', 'projForm');
         const textField = document.createElement('input');
         textField.setAttribute('type', 'text');
+        textField.setAttribute('maxlength', '27');
+        textField.setAttribute('required', '');
         projFormContainer.appendChild(textField);
         const cancel = document.createElement('input');
         cancel.setAttribute('type', 'button');
@@ -145,7 +157,7 @@ const todo = (title, description, dueDate, priority) => {
         const submit = document.createElement('input');
         submit.setAttribute('type', 'button');
         submit.setAttribute('id', 'submit');
-        submit.setAttribute('value', 'submit');
+        submit.setAttribute('value', 'Add');
         submit.addEventListener('click', () => {
             if(document.getElementById('projForm').checkValidity()) {
                if(!(textField.value in projectsList)) {

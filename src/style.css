@@ -54,6 +54,9 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
 }
+.checked {
+    background-color: #cbd5e1 !important;
+}
 #projBtn, #taskBtn {
     height: 5vh;
     width: 5vh;
@@ -100,6 +103,7 @@ body {
     justify-content: center;
 }
 .task {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -108,9 +112,25 @@ body {
     padding-left: 2rem;
     padding-right: 2rem;
     border-radius: 14px;
+    height: 5rem;
 }
+.task input {
+    width: 2rem;
+    height: 2rem;
+}
+.checked:after {
+    position: absolute;
+    left: 2.5%;
+    top: 50%;
+    height: 2px;
+    background: var(--black-bg-color);
+    content: "";
+    width: 95%;
+    display: block;
+    transform: rotate(0.2deg);
+  }
 .task:hover {
-    filter: brightness(.9);
+    border: 2px solid grey;
 }
 h2 {
     background-color: var(--black-bg-color);
@@ -164,3 +184,4 @@ img {
     margin-bottom: .5rem;
     font-size: 1.4rem;
   }
+  
