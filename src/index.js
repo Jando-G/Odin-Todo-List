@@ -76,7 +76,21 @@ const todo = (title, description, dueDate, priority) => {
          taskTitle.innerHTML = task.title;
          newDiv.appendChild(taskTitle);
          const taskDate = document.createElement('div');
-         taskDate.innerHTML = task.dueDate;
+         //date manipulation starts here
+         const today = new Date().setHours(0, 0 , 0, 0);
+         const result = (task.dueDate - today) / 86400000;
+         if(result === 0) {
+            taskDate.innerHTML = 'Due today';
+         }
+         else if(result === 1) {
+            taskDate.innerHTML = 'Due tomorrow';
+         }
+         else if(result < 0) {
+            taskDate.innerHTML = `Overdue! (${Math.abs(result)} days ago)`;
+         }
+         else {
+            taskDate.innerHTML = `Due in ${result} days`;
+         }
          newDiv.appendChild(taskDate);
          newDiv.addEventListener('click', (e)=> {
             if(e.target != checkBox) {
@@ -229,6 +243,7 @@ taskForm.appendChild(taskFormHead);
 const taskNameField = document.createElement('input');
 taskNameField.setAttribute('type', 'text');
 taskNameField.setAttribute('placeholder', 'Task name');
+taskNameField.setAttribute('required', '');
 taskForm.appendChild(taskNameField);
 const taskDeskField = document.createElement('input');
 taskDeskField.setAttribute('type', 'text');
@@ -246,7 +261,7 @@ urgencyLabel.innerHTML = 'urgency';
 taskForm.appendChild(urgencyLabel);
 const taskUrgencyField = document.createElement('input');
 taskUrgencyField.setAttribute('type', 'range');
-taskUrgencyField.setAttribute('value', 'urgency');
+taskUrgencyField.setAttribute('value', '0');
 taskUrgencyField.setAttribute('min', '0');
 taskUrgencyField.setAttribute('max', '5');
 taskForm.appendChild(taskUrgencyField);
@@ -274,33 +289,19 @@ overlay.addEventListener('click', ()=> {
         document.body.removeChild(document.body.lastChild);
     }
     });
-// submitProj.addEventListener('click', ()=> {
-//     if(document.getElementById('projForm').checkValidity()) {
-//         if(!(projNameField.value in projectsList)) {
-//             projectsList[projNameField.value] = [];
-//             domStuff.renderProj(projNameField.value);
-//             projNameField.value = '';
-//             projForm.classList.add('hidden');
-//             overlay.classList.add('hidden');
-//         }
-//         else {
-//             alert(`Project with name "${projNameField.value}" already exists!`);
-//         }
-//     }
-//     });
 submitTask.addEventListener('click', ()=> {
     if(document.getElementById('taskForm').checkValidity()) {
        projectsList[currentProject].push(todo(
         taskNameField.value,
         taskDescField.value,
-        taskDateField.value,
+        taskDateField.valueAsDate.setHours(0, 0, 0, 0) + 86400000,
         taskUrgencyField.value
        ));
         domStuff.renderTask(projectsList[currentProject][projectsList[currentProject].length - 1]);
         taskNameField.value = '';
         taskDescField.value = '';
         taskDateField.value = '';
-        taskUrgencyField.value = '';
+        taskUrgencyField.value = 0;
         taskForm.classList.add('hidden');
         overlay.classList.add('hidden');
     }
@@ -311,7 +312,3 @@ submitTask.addEventListener('click', ()=> {
             localStorage.setItem('data', JSON.stringify(projectsList));
         }
     }
-    projectsList['test'] = [];
-    for(let i = 0; i < 20; i++) {
-        projectsList['test'][i] = todo(`test ${i}`, 'a test task', 'dueDate', Math.floor(Math.random() * 6));
-        }
