@@ -121,6 +121,7 @@ const todo = (title, description, dueDate, priority) => {
                 container.removeChild(container.lastChild);
             }
             //add tasks to DOM
+            console.log()
             for(const task in projectsList[project]) {
                 domStuff.renderTask(projectsList[project][task]);
             }
@@ -254,6 +255,7 @@ taskDescField.setAttribute('placeholder', 'Description (optional)');
 taskForm.appendChild(taskDescField);
 const taskDateField = document.createElement('input');
 taskDateField.setAttribute('type', 'date');
+taskDateField.setAttribute('value', format(new Date(), 'yyyy-MM-dd'));
 taskForm.appendChild(taskDateField);
 const urgencyLabel = document.createElement('label');
 urgencyLabel.setAttribute('for', 'urgency');
@@ -291,13 +293,19 @@ overlay.addEventListener('click', ()=> {
     });
 submitTask.addEventListener('click', ()=> {
     if(document.getElementById('taskForm').checkValidity()) {
-       projectsList[currentProject].push(todo(
+        let i;
+        for(i = 0; i < projectsList[currentProject].length; i++) {
+            if(taskDateField.valueAsDate.setHours(0, 0, 0, 0) + 86400000 < projectsList[currentProject][i].dueDate) {
+                break;
+            }
+        };
+        projectsList[currentProject].splice(i, 0, todo(
         taskNameField.value,
         taskDescField.value,
         taskDateField.valueAsDate.setHours(0, 0, 0, 0) + 86400000,
         taskUrgencyField.value
        ));
-        domStuff.renderTask(projectsList[currentProject][projectsList[currentProject].length - 1]);
+        domStuff.renderTasks(currentProject);
         taskNameField.value = '';
         taskDescField.value = '';
         taskDateField.value = '';
