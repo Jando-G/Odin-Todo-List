@@ -1,6 +1,7 @@
 import './style.css';
 import plus from './plus-circle.png';
 import trashCan from './trash-can-outline.png';
+import github from './github.png';
 import { compareAsc, format } from 'date-fns'
 
 const todo = (title, description, dueDate, priority) => {
@@ -79,18 +80,20 @@ const todo = (title, description, dueDate, priority) => {
          //date manipulation starts here
          const today = new Date().setHours(0, 0 , 0, 0);
          const result = (task.dueDate - today) / 86400000;
+         let dueMsg = '';
          if(result === 0) {
-            taskDate.innerHTML = 'Due today';
+            dueMsg = 'Due today';
          }
          else if(result === 1) {
-            taskDate.innerHTML = 'Due tomorrow';
+            dueMsg = 'Due tomorrow';
          }
          else if(result < 0) {
-            taskDate.innerHTML = `Overdue! (${Math.abs(result)} days ago)`;
+            dueMsg = `Overdue! (${Math.floor(Math.abs(result))} days ago)`;
          }
          else {
-            taskDate.innerHTML = `Due in ${result} days`;
+            dueMsg = `Due in ${Math.floor(result)} days`;
          }
+         taskDate.innerHTML = dueMsg;
          newDiv.appendChild(taskDate);
          newDiv.addEventListener('click', (e)=> {
             if(e.target != checkBox) {
@@ -101,12 +104,17 @@ const todo = (title, description, dueDate, priority) => {
         detHead.innerHTML = task.title;
         details.appendChild(detHead);
         const detDesc = document.createElement('div');
-        detDesc.innerHTML = task.description;
+        if(task.description) {
+            detDesc.innerHTML = task.description;
+        }
+        else {
+            detDesc.innerHTML = 'No description'
+        }
         details.appendChild(detDesc);
         document.body.appendChild(details);
         const detDue = document.createElement('div');
         //add amount of days left in paranthesis
-        detDue.innerHTML = `Due: ${task.dueDate} (In blank days)`;
+        detDue.innerHTML = `Due: ${format(new Date(task.dueDate), 'MM-dd-yyyy')} (${dueMsg})`;
         details.appendChild(detDue);
         overlay.classList.remove('hidden');
             }
@@ -198,7 +206,11 @@ if(window.localStorage.length) {
     projectsList = JSON.parse(str);
 }
 else { //no data, populate list
-    projectsList['My Project'] = [todo('my task', 'do cool stuff', 'tomorrow', 'urgent')];
+    projectsList['My Project'] = [todo('About this website', 
+    `A simple todo list with project folders to sort your tasks in.
+    Made by Alejandro Gutierrez 2022.`,
+     new Date().setHours(0, 0, 0, 0), 
+     'urgent')];
 }
 let currentProject = Object.keys(projectsList)[0];
 /*Code for generating skeleton of page */
@@ -244,14 +256,12 @@ taskForm.appendChild(taskFormHead);
 const taskNameField = document.createElement('input');
 taskNameField.setAttribute('type', 'text');
 taskNameField.setAttribute('placeholder', 'Task name');
+taskNameField.setAttribute('maxlength', '30');
 taskNameField.setAttribute('required', '');
-taskForm.appendChild(taskNameField);
-const taskDeskField = document.createElement('input');
-taskDeskField.setAttribute('type', 'text');
-taskDeskField.setAttribute('placeholder', 'Task name');
 taskForm.appendChild(taskNameField);
 const taskDescField = document.createElement('textarea');
 taskDescField.setAttribute('placeholder', 'Description (optional)');
+taskNameField.setAttribute('maxlength', '50');
 taskForm.appendChild(taskDescField);
 const taskDateField = document.createElement('input');
 taskDateField.setAttribute('type', 'date');
@@ -308,12 +318,19 @@ submitTask.addEventListener('click', ()=> {
         domStuff.renderTasks(currentProject);
         taskNameField.value = '';
         taskDescField.value = '';
-        taskDateField.value = '';
+        taskDateField.value = format(new Date(), 'yyyy-MM-dd');
         taskUrgencyField.value = 0;
         taskForm.classList.add('hidden');
         overlay.classList.add('hidden');
     }
     });
+const gitanch = document.createElement('a');
+gitanch.setAttribute('href', 'https://github.com/Jando-G');
+const gitLogo = document.createElement('img');
+gitLogo.setAttribute('src', github);
+gitLogo.setAttribute('id', 'gitLogo');
+gitanch.appendChild(gitLogo);
+document.body.appendChild(gitanch);
     window.onbeforeunload = ()=> {
         localStorage.clear();
         if(Object.keys(projectsList).length) {
