@@ -1,10 +1,8 @@
-make it so all those local variables (such as const container = proj...)
-are using the global variables already declared
+limit characters for input to avoid overflow on tasks 
 
-the forms "submit" on enter instead of doing what they are supposed to
+can I center the task titles?
 
-test identical project name
+add an "All projects" list. need to change how they are rendered sadge 
 
-make form use actual styling instead of just alerting
+form feedback
 
-limit characters for input to avoid overflow

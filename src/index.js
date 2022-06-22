@@ -114,7 +114,7 @@ const todo = (title, description, dueDate, priority) => {
         document.body.appendChild(details);
         const detDue = document.createElement('div');
         //add amount of days left in paranthesis
-        detDue.innerHTML = `Due: ${format(new Date(task.dueDate), 'MM-dd-yyyy')} (${dueMsg})`;
+        detDue.innerHTML = `${format(new Date(task.dueDate), 'MM-dd-yyyy')} (${dueMsg})`;
         details.appendChild(detDue);
         overlay.classList.remove('hidden');
             }
@@ -162,25 +162,27 @@ const todo = (title, description, dueDate, priority) => {
     };
     const generateProjForm = () => {
         const projFormContainer = document.createElement('form');
+        projFormContainer.setAttribute('onsubmit', 'return false;');
         projFormContainer.setAttribute('id', 'projForm');
         const textField = document.createElement('input');
         textField.setAttribute('type', 'text');
         textField.setAttribute('maxlength', '27');
+        textField.setAttribute('name', 'projName');
         textField.setAttribute('required', '');
         projFormContainer.appendChild(textField);
-        const cancel = document.createElement('input');
+        const cancel = document.createElement('button');
         cancel.setAttribute('type', 'button');
         cancel.setAttribute('id', 'cancel');
-        cancel.setAttribute('value', 'cancel');
+        cancel.innerHTML = 'Cancel';
         cancel.addEventListener('click', () => {
             projects.removeChild(projFormContainer);
             generateProjBtn();
         });
         projFormContainer.appendChild(cancel);
-        const submit = document.createElement('input');
+        const submit = document.createElement('button');
         submit.setAttribute('type', 'button');
         submit.setAttribute('id', 'submit');
-        submit.setAttribute('value', 'Add');
+        submit.innerHTML = 'Add';
         submit.addEventListener('click', () => {
             if(document.getElementById('projForm').checkValidity()) {
                if(!(textField.value in projectsList)) {
@@ -209,7 +211,7 @@ else { //no data, populate list
     projectsList['My Project'] = [todo('About this website', 
     `A simple todo list with project folders to sort your tasks in.
     Made by Alejandro Gutierrez 2022.`,
-     new Date().setHours(0, 0, 0, 0), 
+     new Date('06-21-2022').setHours(0, 0, 0, 0), 
      'urgent')];
 }
 let currentProject = Object.keys(projectsList)[0];
@@ -248,6 +250,7 @@ for (const project in projectsList) {
 //add task popup
 const taskForm = document.createElement('form');
 taskForm.classList.add('form-container');
+taskForm.setAttribute('onsubmit', 'return false;');
 taskForm.setAttribute('id', 'taskForm');
 taskForm.classList.add('hidden');
 const taskFormHead = document.createElement('h1');
@@ -269,7 +272,7 @@ taskDateField.setAttribute('value', format(new Date(), 'yyyy-MM-dd'));
 taskForm.appendChild(taskDateField);
 const urgencyLabel = document.createElement('label');
 urgencyLabel.setAttribute('for', 'urgency');
-urgencyLabel.innerHTML = 'urgency';
+urgencyLabel.innerHTML = 'Priority';
 taskForm.appendChild(urgencyLabel);
 const taskUrgencyField = document.createElement('input');
 taskUrgencyField.setAttribute('type', 'range');

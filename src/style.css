@@ -222,6 +222,18 @@ img {
     justify-content: center;
     align-items: end;
   }
+  label:before {
+    content: "No Rush";
+    position: relative;
+    top: 2.8rem;
+    right: 10rem;
+  }
+  label:after {
+    content: "URGENT";
+    position: relative;
+    top: 2.8rem;
+    right: -10rem;
+  }
   #gitLogo {
     position: absolute;
     top: 93vh;
