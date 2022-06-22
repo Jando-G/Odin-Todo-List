@@ -129,7 +129,6 @@ const todo = (title, description, dueDate, priority) => {
                 container.removeChild(container.lastChild);
             }
             //add tasks to DOM
-            console.log()
             for(const task in projectsList[project]) {
                 domStuff.renderTask(projectsList[project][task]);
             }
@@ -308,10 +307,20 @@ submitTask.addEventListener('click', ()=> {
     if(document.getElementById('taskForm').checkValidity()) {
         let i;
         for(i = 0; i < projectsList[currentProject].length; i++) {
-            if(taskDateField.valueAsDate.setHours(0, 0, 0, 0) + 86400000 < projectsList[currentProject][i].dueDate) {
+            if(taskDateField.valueAsDate.setHours(0, 0, 0, 0) + 86400000 <= projectsList[currentProject][i].dueDate) {
                 break;
             }
         };
+        for(i = i; i < projectsList[currentProject].length; i++) {
+            if(taskUrgencyField.value < projectsList[currentProject][i].priority && 
+                taskDateField.valueAsDate.setHours(0, 0, 0, 0) + 86400000 === projectsList[currentProject][i].dueDate) {
+                i++;
+                console.log('inc')
+            }
+            else {
+                break;
+            }
+        }
         projectsList[currentProject].splice(i, 0, todo(
         taskNameField.value,
         taskDescField.value,
